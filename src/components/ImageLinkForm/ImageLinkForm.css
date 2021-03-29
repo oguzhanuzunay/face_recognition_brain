@@ -1,0 +1,22 @@
+.form {
+  width: 700px;
+  background-color: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+input {
+  border-width: 1px;
+  border-radius: 3px;
+  border-color: black;
+  border-right-width: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+button {
+  border-width: 1px;
+  border-radius: 3px;
+  border-color: black;
+  border-left-width: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+}
