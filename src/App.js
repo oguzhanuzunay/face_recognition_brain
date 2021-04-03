@@ -32,6 +32,23 @@ const App = () => {
   const [box, setBox] = useState({});
   const [route, setRoute] = useState('signIn');
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState({
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: '',
+  });
+
+  const loadUser = (data) => {
+    setUser({
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined,
+    });
+  };
 
   const calculateFaceLocation = (data) => {
     const faceData = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -51,13 +68,28 @@ const App = () => {
   const displayFace = (box) => {
     setBox(box);
   };
-  const onButtonSubmit = () => {
+  const onPictureSubmit = () => {
     setImgUrl(input);
     app.models
       .predict(Clarifai.FACE_DETECT_MODEL, input)
       .then((response) => {
         displayFace(calculateFaceLocation(response));
       })
+      .then(() =>
+        fetch('http://localhost:3000/image', {
+          method: 'put',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: user.id,
+          }),
+        })
+          .then((response) => response.json())
+          .then((count) => {
+            setUser((prevUser) => ({ ...prevUser, entries: count }));
+            console.log(user.entries, count);
+          })
+      )
+
       .catch((err) => {
         console.log(err);
       });
@@ -68,6 +100,15 @@ const App = () => {
   };
 
   useEffect(() => {
+    fetch('http://localhost:3000/', {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+
     if (route === 'signIn' && 'Register') {
       setIsSignedIn(false);
     } else if (route === 'homePage') {
@@ -82,17 +123,17 @@ const App = () => {
       {route === 'homePage' ? (
         <div>
           <Logo />
-          <Rank />
+          <Rank name={user.name} entries={user.entries} />
           <ImageLinkForm
             onInputChange={setInput}
-            onButtonSubmit={onButtonSubmit}
+            onPictureSubmit={onPictureSubmit}
           />
           <FaceRecognition box={box} imgUrl={imgUrl} />
         </div>
       ) : route === 'signIn' ? (
-        <Signin onRouteChange={onRouteChange} />
+        <Signin loadUser={loadUser} onRouteChange={onRouteChange} />
       ) : (
-        <Register onRouteChange={onRouteChange} />
+        <Register loadUser={loadUser} onRouteChange={onRouteChange} />
       )}
     </div>
   );
