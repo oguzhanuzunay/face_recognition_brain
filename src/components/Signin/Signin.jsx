@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const Signin = ({ onRouteChange, loadUser }) => {
   const [email, setEmail] = useState('');
@@ -24,8 +24,6 @@ const Signin = ({ onRouteChange, loadUser }) => {
           onRouteChange('homePage');
         } else alert('wrong Password or Username');
       });
-
-    // onRouteChange('homePage');
   };
 
   return (
