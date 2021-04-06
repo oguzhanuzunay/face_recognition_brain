@@ -8,11 +8,6 @@ import Particles from 'react-particles-js';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.jsx';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
-const Clarifai = require('clarifai');
-
-const app = new Clarifai.App({
-  apiKey: '34f64be892c946a6ad549aa64584f86f',
-});
 
 const particlesOptions = {
   particles: {
@@ -39,6 +34,21 @@ const App = () => {
     entries: 0,
     joined: '',
   });
+
+  const clearInfo = () => {
+    setInput('');
+    setImgUrl('');
+    setBox({});
+    setRoute('signIn');
+    setIsSignedIn(false);
+    setUser({
+      id: '',
+      name: '',
+      email: '',
+      entries: 0,
+      joined: '',
+    });
+  };
 
   const loadUser = (data) => {
     setUser({
@@ -70,8 +80,15 @@ const App = () => {
   };
   const onPictureSubmit = () => {
     setImgUrl(input);
-    app.models
-      .predict(Clarifai.FACE_DETECT_MODEL, input)
+
+    fetch('http://localhost:3000/imageurl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: input,
+      }),
+    })
+      .then((response) => response.json())
       .then((response) => {
         displayFace(calculateFaceLocation(response));
       })
@@ -86,16 +103,16 @@ const App = () => {
           .then((response) => response.json())
           .then((count) => {
             setUser((prevUser) => ({ ...prevUser, entries: count }));
-            console.log(user.entries, count);
           })
       )
-
       .catch((err) => {
         console.log(err);
       });
   };
 
   const onRouteChange = (page) => {
+    clearInfo();
+
     setRoute(page);
   };
 
@@ -107,7 +124,7 @@ const App = () => {
       },
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .catch(console.log);
 
     if (route === 'signIn' && 'Register') {
       setIsSignedIn(false);

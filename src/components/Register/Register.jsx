@@ -21,9 +21,9 @@ const Register = ({ onRouteChange, loadUser }) => {
     })
       .then((res) => res.json())
       .then((user) => {
-        if (user) {
-          loadUser(user);
+        if (user.id) {
           onRouteChange('homePage');
+          loadUser(user);
         }
       });
   };

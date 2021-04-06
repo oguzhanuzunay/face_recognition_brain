@@ -20,10 +20,11 @@ const Signin = ({ onRouteChange, loadUser }) => {
       .then((res) => res.json())
       .then((user) => {
         if (user.id) {
-          loadUser(user);
           onRouteChange('homePage');
+          loadUser(user);
         } else alert('wrong Password or Username');
-      });
+      })
+      .catch(console.log);
   };
 
   return (
