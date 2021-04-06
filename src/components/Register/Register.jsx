@@ -10,7 +10,7 @@ const Register = ({ onRouteChange, loadUser }) => {
   const onPasswordChange = (event) => setPassword(event.target.value);
 
   const onSubmitRegister = () => {
-    fetch('http://localhost:3000/register', {
+    fetch('https://evening-hollows-55343.herokuapp.com/register', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

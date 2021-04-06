@@ -81,7 +81,7 @@ const App = () => {
   const onPictureSubmit = () => {
     setImgUrl(input);
 
-    fetch('http://localhost:3000/imageurl', {
+    fetch('https://evening-hollows-55343.herokuapp.com/imageurl', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -93,7 +93,7 @@ const App = () => {
         displayFace(calculateFaceLocation(response));
       })
       .then(() =>
-        fetch('http://localhost:3000/image', {
+        fetch('https://evening-hollows-55343.herokuapp.com/image', {
           method: 'put',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -117,7 +117,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:3000/', {
+    fetch('https://evening-hollows-55343.herokuapp.com/', {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
